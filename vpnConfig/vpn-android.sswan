@@ -1,0 +1,8 @@
+{
+  "uuid": "d81b2f12-7fb7-4024-ac8d-1479b0ebc32a",
+  "name": "101034.ip-ns.net",
+  "type": "ikev2-eap",
+  "remote": {
+    "addr": "101034.ip-ns.net"
+  }
+}
