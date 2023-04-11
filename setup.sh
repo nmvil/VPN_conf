@@ -495,6 +495,35 @@ cat << EOF > ./vpnConfig/orig.mobileconfig
 EOF
 
 
+cat << EOF > ./vpnConfig/orig.ps1
+$Response = Invoke-WebRequest -UseBasicParsing -Uri https://valid-isrgrootx1.letsencrypt.org
+# ^ this line fixes a certificate lazy-loading bug: see https://github.com/jawj/IKEv2-setup/issues/126
+
+Install-Module -Name VPNCredentialsHelper
+
+Add-VpnConnection -Name ${VPNNAME} `
+  -ServerAddress "${VPNHOST}" `
+  -TunnelType IKEv2 `
+  -EncryptionLevel Maximum `
+  -AuthenticationMethod EAP `
+  -RememberCredential
+
+Set-VpnConnectionIPsecConfiguration -ConnectionName ${VPNNAME} `
+  -AuthenticationTransformConstants GCMAES256 `
+  -CipherTransformConstants GCMAES256 `
+  -EncryptionMethod GCMAES256 `
+  -IntegrityCheckMethod SHA384 `
+  -DHGroup ECP384 `
+  -PfsGroup ECP384 `
+  -Force
+
+Set-VpnConnectionUsernamePassword -connectionname ${VPNNAME} `
+  -username NewLogin `
+  -password NewPass
+
+EOF
+
+
 # necessary for IKEv2?
 # Windows: https://support.microsoft.com/en-us/kb/926179
 # HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PolicyAgent += AssumeUDPEncapsulationContextOnSendRule, DWORD = 2
