@@ -1,14 +1,5 @@
 #!/bin/bash -e
 
-# github.com/jawj/IKEv2-setup
-# Copyright (c) 2015 – 2022 George MacKerron
-# Released under the MIT licence: http://opensource.org/licenses/mit-license
-
-echo
-echo "=== https://github.com/jawj/IKEv2-setup ==="
-echo
-
-
 function exit_badly {
   echo "$1"
   exit 1
@@ -28,8 +19,6 @@ echo
 
 export DEBIAN_FRONTEND=noninteractive
 
-# see https://github.com/jawj/IKEv2-setup/issues/66 and https://bugs.launchpad.net/subiquity/+bug/1783129
-# note: software-properties-common is required for add-apt-repository
 apt-get -o Acquire::ForceIPv4=true update
 apt-get -o Acquire::ForceIPv4=true install -y software-properties-common
 add-apt-repository -y universe
@@ -496,36 +485,55 @@ EOF
 
 
 cat << EOF > ./vpnConfig/orig.ps1
-$Response = Invoke-WebRequest -UseBasicParsing -Uri https://valid-isrgrootx1.letsencrypt.org
-# ^ this line fixes a certificate lazy-loading bug: see https://github.com/jawj/IKEv2-setup/issues/126
+\$Response = Invoke-WebRequest -UseBasicParsing -Uri https://valid-isrgrootx1.letsencrypt.org
 
 Install-Module -Name VPNCredentialsHelper
 
-Add-VpnConnection -Name ${VPNNAME} `
-  -ServerAddress "${VPNHOST}" `
-  -TunnelType IKEv2 `
-  -EncryptionLevel Maximum `
-  -AuthenticationMethod EAP `
+Add-VpnConnection -Name ${VPNNAME} \`
+  -ServerAddress "${VPNHOST}" \`
+  -TunnelType IKEv2 \`
+  -EncryptionLevel Maximum \`
+  -AuthenticationMethod EAP \`
   -RememberCredential
 
-Set-VpnConnectionIPsecConfiguration -ConnectionName ${VPNNAME} `
-  -AuthenticationTransformConstants GCMAES256 `
-  -CipherTransformConstants GCMAES256 `
-  -EncryptionMethod GCMAES256 `
-  -IntegrityCheckMethod SHA384 `
-  -DHGroup ECP384 `
-  -PfsGroup ECP384 `
+Set-VpnConnectionIPsecConfiguration -ConnectionName ${VPNNAME} \`
+  -AuthenticationTransformConstants GCMAES256 \`
+  -CipherTransformConstants GCMAES256 \`
+  -EncryptionMethod GCMAES256 \`
+  -IntegrityCheckMethod SHA384 \`
+  -DHGroup ECP384 \`
+  -PfsGroup ECP384 \`
   -Force
 
-Set-VpnConnectionUsernamePassword -connectionname ${VPNNAME} `
-  -username NewLogin `
+Set-VpnConnectionUsernamePassword -connectionname ${VPNNAME} \`
+  -username NewLogin \`
   -password NewPass
 
 EOF
 
 
-# necessary for IKEv2?
-# Windows: https://support.microsoft.com/en-us/kb/926179
-# HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PolicyAgent += AssumeUDPEncapsulationContextOnSendRule, DWORD = 2
+cat << EOF > ./newVPNuser.sh
+#!/bin/bash -e
+read -r -p "Username: " VPNUSER
+NEWPASS=\$(head -c 1024 /dev/urandom | LC_ALL=C tr -dc '[0-9a-zA-Z.,!#%&()+<>?~{}@^_=|:;\-]' | head -c 50)
+mkdir \$VPNUSER
+
+sed -r \
+-e "11s/NewLogin/\$VPNUSER/" \
+-e "13s/NewPass/\$NEWPASS/" \
+./vpnConfig/orig.mobileconfig > \$VPNUSER/\$VPNUSER.mobileconfig
+sed -r \
+-e "23s/NewLogin/\$VPNUSER/" \
+-e "24s/NewPass/\$NEWPASS/" \
+./vpnConfig/orig.ps1 > \$VPNUSER/\$VPNUSER.ps1
+
+echo "\$VPNUSER : EAP \"\$NEWPASS\"" >> /etc/ipsec.secrets
+ipsec restart 1>/dev/null
+echo
+echo "F6 to detach"
+echo "python3 -m http.server -d \$VPNUSER 8228"
+echo "${IP}:8228/\$VPNUSER.mobileconfig"
+
+EOF
 
 
