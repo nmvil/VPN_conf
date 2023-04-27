@@ -368,10 +368,7 @@ APT::Periodic::Unattended-Upgrade "1";
 
 service unattended-upgrades restart
 
-# edit new user script
-sed -r \
--e "14s/newipaddress/$IP/" \
--i ./newVPNuser.sh
+mkdir vpnConfig
 
 UUID=$(uuidgen)
 # orig.mobileconfig
