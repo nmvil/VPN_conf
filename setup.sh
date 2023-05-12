@@ -292,9 +292,7 @@ conn roadwarrior
   rightsendcert=never
 " > /etc/ipsec.conf
 
-echo "${VPNHOST} : RSA \"privkey.pem\"
-${VPNUSERNAME} : EAP \"${VPNPASSWORD}\"
-" > /etc/ipsec.secrets
+echo "${VPNHOST} : RSA \"privkey.pem\"" > /etc/ipsec.secrets
 
 ipsec restart
 
@@ -512,7 +510,7 @@ EOF
 cat << EOF > ./newVPNuser.sh
 #!/bin/bash -e
 read -r -p "Username: " VPNUSER
-NEWPASS=\$(head -c 1024 /dev/urandom | LC_ALL=C tr -dc '[0-9a-zA-Z.,!#%&()+<>?~{}@^_=|:;\-]' | head -c 50)
+NEWPASS=\$(head -c 1024 /dev/urandom | LC_ALL=C tr -dc '[0-9a-zA-Z!#$%&()*+,./:;]' | head -c 50)
 mkdir \$VPNUSER
 
 sed -r \
