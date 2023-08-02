@@ -100,7 +100,9 @@ read -r -p "Email address for sysadmin (e.g. j.bloggs@example.com): " EMAILADDR
 # read -r -p "Desired SSH log-in port (default: 22): " SSHPORT
 SSHPORT=22
 
+LOGINUSERNAME='nmvil'
 # read -r -p "New SSH log-in user name: " LOGINUSERNAME
+
 
 # CERTLOGIN="n"
 # if [[ -s /root/.ssh/authorized_keys ]]; then
