@@ -92,8 +92,8 @@ echo
 echo "--- Configuration: general server settings ---"
 echo
 
-read -r -p "Timezone (default: Europe/London): " TZONE
-TZONE=${TZONE:-'Europe/London'}
+read -r -p "Timezone (default: Europe/Moscow): " TZONE
+TZONE=${TZONE:-'Europe/Moscow'}
 
 read -r -p "Email address for sysadmin (e.g. j.bloggs@example.com): " EMAILADDR
 
@@ -297,9 +297,9 @@ echo "${VPNHOST} : RSA \"privkey.pem\"" > /etc/ipsec.secrets
 ipsec restart
 
 
-echo
-echo "--- User ---"
-echo
+# echo
+# echo "--- User ---"
+# echo
 
 # user + SSH
 
