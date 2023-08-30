@@ -473,4 +473,4 @@ echo "${IP}:8228/\$VPNUSER.mobileconfig"
 
 EOF
 
-
+echo "\033[0m\033[01;38;05;46mDONE!\033[0m"
