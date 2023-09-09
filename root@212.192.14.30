@@ -1,12 +1,11 @@
 #!/bin/bash -e
 
-export DEBIAN_FRONTEND=noninteractive
 apt-get -o Acquire::ForceIPv4=true update
-apt-get -o Acquire::ForceIPv4=true --with-new-pkgs upgrade -y
-apt-get -o Acquire::ForceIPv4=true install -y software-properties-common
 add-apt-repository -y universe
 add-apt-repository -y restricted
 add-apt-repository -y multiverse
+apt-get -o Acquire::ForceIPv4=true install -y software-properties-common
+apt-get -o Acquire::ForceIPv4=true --with-new-pkgs upgrade -y
 apt autoremove -y
 apt-get -o Acquire::ForceIPv4=true install -y language-pack-en iptables-persistent postfix mutt unattended-upgrades certbot uuid-runtime
 apt-get -o Acquire::ForceIPv4=true install -y software-properties-common
