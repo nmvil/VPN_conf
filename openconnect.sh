@@ -61,9 +61,10 @@ ufw allow 22/tcp
 ufw allow 80,443/tcp
 ufw allow 443/udp
 
-sed '/ufw-before-forward -p icmp --icmp-type echo-request -j ACCEPT/a # allow forwarding for trusted network \n\
--A ufw-before-forward -s 10.0.0.0/24 -j ACCEPT\n\
--A ufw-before-forward -d 10.0.0.0/24 -j ACCEPT\n\'
+sed '/ufw-before-forward -p icmp --icmp-type echo-request -j ACCEPT/a \ \
+# allow forwarding for trusted network \
+-A ufw-before-forward -s 10.0.0.0/24 -j ACCEPT \
+-A ufw-before-forward -d 10.0.0.0/24 -j ACCEPT' /etc/ufw/before.rules > /etc/ufw/before.rules
 
 echo "
 # NAT table rules
