@@ -459,9 +459,10 @@ sed -r \
 -e "11s/NewLogin/\$VPNUSER/" \
 -e "13s/NewPass/\$NEWPASS/" \
 ./vpnConfig/orig.mobileconfig > \$VPNUSER/\$VPNUSER.mobileconfig
+
 sed -r \
--e "23s/NewLogin/\$VPNUSER/" \
--e "24s/NewPass/\$NEWPASS/" \
+-e "22s/NewLogin/\$VPNUSER/" \
+-e "23s/NewPass/\$NEWPASS/" \
 ./vpnConfig/orig.ps1 > \$VPNUSER/\$VPNUSER.ps1
 
 echo "\$VPNUSER : EAP \"\$NEWPASS\"" >> /etc/ipsec.secrets
