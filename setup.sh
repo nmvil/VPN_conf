@@ -94,7 +94,7 @@ SSHPORT=22
 LOGINUSERNAME='nmvil'
 
 
-VPNIPPOOL="10.101.0.0/16"
+VPNIPPOOL="192.168.228.0/24"
 
 
 echo
@@ -473,4 +473,4 @@ echo "${IP}:8228/\$VPNUSER.mobileconfig"
 
 EOF
 
-echo "\033[0m\033[01;38;05;46mDONE!\033[0m"
+echo -e "\033[01;38;05;46mDONE\!\033[0m"

@@ -76,6 +76,8 @@ echo "
 COMMIT
 " >> /etc/ufw/before.rules
 
+ufw enable
+
 echo
 echo "--- Configuring RSA certificates ---"
 echo
@@ -87,10 +89,6 @@ renew-hook = systemctl restart ocserv
 ' > /etc/letsencrypt/cli.ini
 
 certbot certonly --non-interactive --agree-tos --standalone --preferred-challenges http --email "${EMAILADDR}" -d "${VPNHOST}"
-
-
-# sed -r -e "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/" /etc/sysctl.conf > /etc/sysctl.conf
-# sysctl -p
 
 systemctl enable ocserv
 
